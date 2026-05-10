@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥀</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lana Del Rey Universe</title>
+    <meta name="description" content="A luxury digital dream built for Lana Del Rey. An ultra-aesthetic personal fan website.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/src/style.css">
+  </head>
+  <body class="bg-background text-white font-inter overflow-x-hidden antialiased selection:bg-white/20">
+    
+    <!-- Cinematic Background Elements -->
+    <div class="fixed inset-0 pointer-events-none z-[-1] overflow-hidden bg-black">
+      <div class="absolute inset-0 bg-noise opacity-[0.03]"></div>
+      <div id="ambient-glow" class="absolute inset-0 transition-colors duration-1000 ease-in-out mix-blend-screen opacity-40"></div>
+      
+      <!-- Animated Orbs -->
+      <div class="absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-indigo-900/20 blur-[120px] animate-pulse-slow"></div>
+      <div class="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-rose-900/20 blur-[150px] animate-pulse-slow" style="animation-delay: 2s;"></div>
+      
+      <!-- Particles Container -->
+      <div id="particles" class="absolute inset-0"></div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-8 left-1/2 -translate-x-1/2 z-50 transform -translate-y-10 opacity-0 transition-all duration-500 ease-out flex items-center justify-center pointer-events-none">
+      <div class="glass-panel px-6 py-3 rounded-full text-sm font-medium tracking-wide shadow-[0_0_30px_rgba(255,255,255,0.1)] border border-white/10 flex items-center gap-3">
+        <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+        <span id="toast-message">Copied to clipboard</span>
+      </div>
+    </div>
+
+    <!-- Random Mixer Modal -->
+    <div id="mixer-modal" class="fixed inset-0 z-40 hidden opacity-0 transition-opacity duration-700 items-center justify-center">
+      <div class="absolute inset-0 bg-black/80 backdrop-blur-xl" id="mixer-backdrop"></div>
+      <div class="relative z-10 flex flex-col items-center justify-center p-8 max-w-2xl w-full text-center scale-95 transform transition-transform duration-700 delay-100" id="mixer-content">
+        <p class="font-cormorant italic text-2xl md:text-4xl text-white/70 mb-4 tracking-wider">Your soul needs...</p>
+        <h2 id="mixer-mood" class="font-playfair text-5xl md:text-7xl font-bold mb-12 text-transparent bg-clip-text bg-gradient-to-r from-white via-white/80 to-white/50 animate-float pb-4"></h2>
+        
+        <div id="mixer-card" class="glass-card w-full max-w-md mx-auto p-8 rounded-2xl border border-white/10 hover:border-white/30 transition-all duration-500 transform hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)] cursor-pointer group">
+          <h3 id="mixer-song" class="font-playfair text-3xl mb-2 group-hover:text-white transition-colors duration-300">Song Name</h3>
+          <p id="mixer-album" class="font-inter text-sm text-white/50 tracking-widest uppercase mb-8">Album Name</p>
+          
+          <div class="flex gap-4 justify-center">
+             <button class="action-btn spotify-btn flex items-center justify-center w-12 h-12 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-300 hover:scale-110 hover:shadow-[0_0_20px_rgba(29,185,84,0.3)]">
+               <svg class="w-5 h-5 text-white/70 group-hover:text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.84.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15.001 10.62 18.72 12.9c.36.181.54.78.241 1.14zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.6.18-1.2.72-1.38 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+             </button>
+             <button class="action-btn youtube-btn flex items-center justify-center w-12 h-12 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-300 hover:scale-110 hover:shadow-[0_0_20px_rgba(255,0,0,0.3)]">
+                <svg class="w-5 h-5 text-white/70 group-hover:text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+             </button>
+          </div>
+        </div>
+        
+        <button id="close-mixer" class="mt-12 text-white/50 hover:text-white transition-colors tracking-widest text-sm uppercase">Close</button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="relative z-10 px-6 md:px-12 lg:px-24">
+      
+      <!-- Hero Section -->
+      <section class="min-h-screen flex flex-col items-center justify-center pt-20 pb-10 text-center relative">
+        <h1 class="font-playfair text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter mb-6 title-glow animate-float">
+          <span class="block text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 pb-2">Lana Del Rey</span>
+          <span class="block font-cormorant italic text-4xl md:text-6xl lg:text-7xl font-light text-white/70 mt-[-10px] md:mt-[-20px]">Universe</span>
+        </h1>
+        <p class="font-inter text-white/50 tracking-[0.3em] uppercase text-xs md:text-sm mb-16 max-w-xl mx-auto leading-relaxed">
+          A luxury digital dream built at 3AM in another universe.
+        </p>
+        
+        <button id="enter-btn" class="glass-button group relative overflow-hidden px-10 py-4 rounded-full border border-white/20 transition-all duration-500 hover:border-white/50 hover:shadow-[0_0_40px_rgba(255,255,255,0.1)]">
+          <span class="relative z-10 font-inter tracking-[0.2em] text-sm font-light group-hover:text-white transition-colors">ENTER PARADISE</span>
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-[100%] group-hover:animate-[shine_1.5s_ease-out_infinite]"></div>
+        </button>
+
+        <button id="mixer-trigger" class="mt-8 text-white/40 hover:text-white/80 font-inter text-xs tracking-[0.2em] uppercase underline underline-offset-8 transition-colors duration-300">
+          What song does your soul need tonight?
+        </button>
+      </section>
+
+      <!-- Search Section -->
+      <section id="search-section" class="py-12 max-w-2xl mx-auto opacity-0 transform translate-y-10 transition-all duration-1000 ease-out">
+        <div class="relative group">
+          <div class="absolute inset-0 bg-white/5 blur-xl rounded-full group-focus-within:bg-white/10 transition-all duration-500"></div>
+          <input type="text" id="search-input" placeholder="Search the cinematic universe..." class="relative w-full bg-black/40 backdrop-blur-md border border-white/10 focus:border-white/30 rounded-full px-8 py-5 text-white placeholder-white/30 outline-none transition-all duration-300 font-inter font-light tracking-wide text-lg shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+          <svg class="absolute right-8 top-1/2 -translate-y-1/2 w-6 h-6 text-white/30 group-focus-within:text-white/70 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
+      </section>
+
+      <!-- Albums Container -->
+      <section id="albums-container" class="pb-32 flex flex-col gap-32">
+        <!-- Injected via JS -->
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 border-t border-white/5 py-12 text-center bg-black/40 backdrop-blur-lg">
+      <p class="font-cormorant italic text-xl text-white/40 mb-2">Made by Saksham More.</p>
+      <p class="font-inter text-xs text-white/20 tracking-widest uppercase">Personal Non-Commercial Website</p>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js');
+        });
+      }
+    </script>
+  </body>
+</html>
