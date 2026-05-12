@@ -3,8 +3,13 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --mood-color: #8B5CF6;
+    --mood-glow: rgba(139, 92, 246, 0.4);
+  }
   body {
-    @apply bg-background text-white font-inter;
+    @apply bg-black text-white font-inter;
+    cursor: none;
   }
 }
 
@@ -12,66 +17,156 @@
   .glass-card {
     @apply bg-white/[0.03] backdrop-blur-[20px] border border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.3)] relative overflow-hidden;
   }
-  
   .glass-button {
     @apply bg-white/[0.05] backdrop-blur-md border border-white/10 shadow-[0_4px_16px_rgba(0,0,0,0.2)];
   }
+  .glass-panel {
+    @apply bg-white/[0.06] backdrop-blur-xl border border-white/10;
+  }
 }
 
-/* Custom Utilities */
+/* ==============================
+   CUSTOM CURSOR
+============================== */
+#cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transition: background 0.3s ease, width 0.3s ease, height 0.3s ease;
+  mix-blend-mode: difference;
+  will-change: transform;
+}
+
+#cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid rgba(255,255,255,0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+  mix-blend-mode: difference;
+  will-change: transform;
+}
+
+#cursor-ring.hover {
+  width: 60px;
+  height: 60px;
+  border-color: var(--mood-color);
+  border-width: 2px;
+  background: rgba(255,255,255,0.03);
+}
+
+body:has(a:hover) #cursor-ring,
+body:has(button:hover) #cursor-ring,
+body:has(.song-card:hover) #cursor-ring {
+  width: 60px;
+  height: 60px;
+  border-color: var(--mood-color);
+}
+
+/* ==============================
+   NOISE TEXTURE
+============================== */
 .bg-noise {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
+/* ==============================
+   SCROLL PROGRESS BAR
+============================== */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--mood-color), rgba(255,255,255,0.8));
+  z-index: 1000;
+  transition: width 0.1s linear, background 0.8s ease;
+  box-shadow: 0 0 10px var(--mood-glow);
+}
+
+/* ==============================
+   TITLE & TYPOGRAPHY
+============================== */
 .title-glow {
-  text-shadow: 0 0 40px rgba(255, 255, 255, 0.3), 0 0 100px rgba(255, 255, 255, 0.1);
+  text-shadow: 0 0 40px rgba(255,255,255,0.25), 0 0 100px rgba(255,255,255,0.1);
 }
 
-/* Animations */
-@keyframes shine {
-  100% { transform: translateX(100%); }
+.mood-glow-text {
+  text-shadow: 0 0 30px var(--mood-glow);
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+/* ==============================
+   MOOD FILTER PILLS
+============================== */
+.mood-pill {
+  position: relative;
+  padding: 10px 22px;
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  cursor: none;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  backdrop-filter: blur(10px);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-@keyframes pulse-slow {
-  0%, 100% { opacity: 0.5; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.05); }
+.mood-pill::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  border-radius: inherit;
 }
 
-.animate-float {
-  animation: float 6s ease-in-out infinite;
+.mood-pill:hover,
+.mood-pill.active {
+  transform: translateY(-3px) scale(1.05);
+  border-color: rgba(255,255,255,0.25);
 }
 
-.animate-pulse-slow {
-  animation: pulse-slow 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.mood-pill.active {
+  box-shadow: 0 0 20px var(--mood-glow), 0 8px 24px rgba(0,0,0,0.4);
 }
 
-/* Smooth hide/show classes */
-.fade-in {
-  opacity: 1 !important;
-  transform: translateY(0) !important;
+.mood-pill-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  font-size: 0.65rem;
+  margin-left: 8px;
+  font-weight: 600;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #050505;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+/* ==============================
+   SONG CARDS
+============================== */
+.song-card {
+  cursor: none;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
 }
 
-/* Song Card Specific Hover Effects */
 .song-card::before {
   content: '';
   position: absolute;
@@ -79,9 +174,9 @@
   left: -100%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.04), transparent);
   transform: skewX(-25deg);
-  transition: all 0.7s ease;
+  transition: all 0.8s ease;
   z-index: 1;
   pointer-events: none;
 }
@@ -95,17 +190,383 @@
   z-index: 2;
 }
 
-/* Particle effect */
+.song-card .mood-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  margin-bottom: 12px;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.song-card:hover .mood-badge {
+  opacity: 1;
+}
+
+.song-card.filtered-out {
+  opacity: 0.1;
+  transform: scale(0.95);
+  pointer-events: none;
+}
+
+.song-card.filtered-match {
+  animation: card-highlight 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes card-highlight {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+/* ==============================
+   SONG DRAWER
+============================== */
+#song-drawer {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  width: min(500px, 95vw);
+  z-index: 200;
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border-radius: 24px 24px 0 0;
+  background: rgba(10,10,10,0.95);
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-bottom: none;
+  box-shadow: 0 -20px 60px rgba(0,0,0,0.8);
+  padding: 28px 28px 40px;
+}
+
+#song-drawer.open {
+  transform: translateX(-50%) translateY(0);
+}
+
+#song-drawer .drawer-handle {
+  width: 40px;
+  height: 4px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 2px;
+  margin: 0 auto 24px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#song-drawer .drawer-handle:hover {
+  background: rgba(255,255,255,0.35);
+}
+
+/* ==============================
+   MOOD GALAXY / CONSTELLATION
+============================== */
+#galaxy-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.galaxy-section {
+  position: relative;
+  overflow: hidden;
+}
+
+/* ==============================
+   MOOD ATMOSPHERE OVERLAY
+============================== */
+#mood-atmosphere {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: background 1.5s ease;
+  mix-blend-mode: screen;
+  opacity: 0.06;
+}
+
+/* ==============================
+   RIPPLE EFFECT
+============================== */
+@keyframes ripple-out {
+  0% { transform: scale(0); opacity: 0.6; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+.ripple {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  transform: scale(0);
+  animation: ripple-out 0.8s ease-out forwards;
+  pointer-events: none;
+  z-index: 10;
+  transform-origin: center;
+  margin-left: -30px;
+  margin-top: -30px;
+}
+
+/* ==============================
+   ANIMATIONS
+============================== */
+@keyframes shine {
+  100% { transform: translateX(100%); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.08); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
+}
+
+@keyframes aurora {
+  0%, 100% { opacity: 0.3; transform: scale(1) translateX(0); }
+  33% { opacity: 0.5; transform: scale(1.1) translateX(-20px); }
+  66% { opacity: 0.4; transform: scale(0.95) translateX(20px); }
+}
+
+@keyframes typewriter-blink {
+  50% { opacity: 0; }
+}
+
+@keyframes slide-in-right {
+  from { transform: translateX(60px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes count-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-pulse-slow { animation: pulse-slow 8s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.animate-fade-up { animation: fade-up 0.8s ease-out forwards; }
+.animate-aurora { animation: aurora 12s ease-in-out infinite; }
+.animate-spin-slow { animation: spin-slow 20s linear infinite; }
+
+/* Stagger children */
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.stagger-children.revealed > *:nth-child(1) { transition-delay: 0.05s; opacity: 1; transform: none; }
+.stagger-children.revealed > *:nth-child(2) { transition-delay: 0.1s; opacity: 1; transform: none; }
+.stagger-children.revealed > *:nth-child(3) { transition-delay: 0.15s; opacity: 1; transform: none; }
+.stagger-children.revealed > *:nth-child(4) { transition-delay: 0.2s; opacity: 1; transform: none; }
+.stagger-children.revealed > *:nth-child(5) { transition-delay: 0.25s; opacity: 1; transform: none; }
+.stagger-children.revealed > *:nth-child(6) { transition-delay: 0.3s; opacity: 1; transform: none; }
+.stagger-children.revealed > *:nth-child(7) { transition-delay: 0.35s; opacity: 1; transform: none; }
+.stagger-children.revealed > *:nth-child(8) { transition-delay: 0.4s; opacity: 1; transform: none; }
+.stagger-children.revealed > *:nth-child(n+9) { transition-delay: 0.45s; opacity: 1; transform: none; }
+
+/* ==============================
+   MOOD STATS BAR
+============================== */
+.mood-stat-bar {
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.06);
+  overflow: hidden;
+  position: relative;
+}
+
+.mood-stat-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  width: 0%;
+  transition: width 1.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+/* ==============================
+   FLOATING MOOD ORBS (BG)
+============================== */
+.mood-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: -1;
+  transition: background 2s ease, opacity 1.5s ease;
+  animation: aurora 15s ease-in-out infinite;
+}
+
+/* ==============================
+   SCROLLBAR
+============================== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #050505; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  transition: background 0.3s;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
+
+/* ==============================
+   PARTICLE EFFECT
+============================== */
 .particle {
   position: absolute;
   background: white;
   border-radius: 50%;
   opacity: 0;
-  animation: particle-fade 4s ease-in-out infinite;
+  animation: particle-fade 5s ease-in-out infinite;
 }
 
 @keyframes particle-fade {
   0% { opacity: 0; transform: translateY(0) scale(0.5); }
-  50% { opacity: 0.5; transform: translateY(-20px) scale(1); }
-  100% { opacity: 0; transform: translateY(-40px) scale(0.5); }
+  40% { opacity: 0.4; transform: translateY(-30px) scale(1); }
+  100% { opacity: 0; transform: translateY(-60px) scale(0.3); }
+}
+
+/* ==============================
+   TOAST
+============================== */
+.glass-panel {
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+}
+
+/* ==============================
+   TYPEWRITER CURSOR
+============================== */
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: white;
+  margin-left: 3px;
+  vertical-align: middle;
+  animation: typewriter-blink 1s step-end infinite;
+}
+
+/* ==============================
+   SECTION REVEAL
+============================== */
+.reveal-section {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.reveal-section.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==============================
+   MOOD SELECTOR ACTIVE GLOW
+============================== */
+#mood-selector-section {
+  position: relative;
+}
+
+/* ==============================
+   ACTIVE FILTER BANNER
+============================== */
+#active-mood-banner {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(20px);
+  transition: all 0.5s ease;
+}
+
+/* ==============================
+   HOVER LINK UNDERLINE
+============================== */
+.hover-underline {
+  position: relative;
+}
+.hover-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: white;
+  transition: width 0.4s ease;
+}
+.hover-underline:hover::after {
+  width: 100%;
+}
+
+/* ==============================
+   ALBUM HEADER HOVER
+============================== */
+.album-header {
+  position: relative;
+}
+
+.album-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.3), transparent);
+  transition: width 1s ease;
+}
+
+.album-header:hover::after {
+  width: 100%;
+}
+
+/* ==============================
+   COUNT BADGE
+============================== */
+.count-badge {
+  overflow: hidden;
+}
+
+.count-badge span {
+  display: block;
+  animation: count-up 0.4s ease forwards;
+}
+
+/* ==============================
+   MAGNETIC BUTTON
+============================== */
+.magnetic-btn {
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ==============================
+   SELECTION STYLE
+============================== */
+::selection {
+  background: rgba(255,255,255,0.15);
+  color: white;
 }
