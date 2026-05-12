@@ -9,7 +9,11 @@
   }
   body {
     @apply bg-black text-white font-inter;
-    cursor: none;
+  }
+  @media (pointer: fine) {
+    body {
+      cursor: none;
+    }
   }
 }
 

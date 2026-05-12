@@ -107,16 +107,18 @@ function animateHeroStats() {
 // CUSTOM CURSOR & SCROLL
 // ==========================================
 function initCustomCursor() {
-  if (window.innerWidth < 768) return; // Disable on mobile
+  // Use matchMedia to detect if the device has a fine pointer (like a mouse)
+  // This prevents the custom cursor logic from running on touch devices while allowing it on small desktop windows
+  if (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) return;
   
   // Make cursor visible first
   cursorDot.style.opacity = '1';
   cursorRing.style.opacity = '1';
 
   window.addEventListener('mousemove', (e) => {
-    // Update cursor position directly without translate
-    cursorDot.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`;
-    cursorRing.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`;
+    // Update cursor position
+    cursorDot.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
+    cursorRing.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
   });
 
   // Hover states for the ring
