@@ -48,6 +48,16 @@ const mixerAlbumEl = document.getElementById('mixer-album');
 const mixerCard = document.getElementById('mixer-card');
 const mixerShuffleBtn = document.getElementById('mixer-shuffle-btn');
 
+// AI Oracle Elements
+const aiTrigger = document.getElementById('ai-trigger');
+const aiModal = document.getElementById('ai-modal');
+const closeAi = document.getElementById('close-ai');
+const aiContent = document.getElementById('ai-content');
+const aiInput = document.getElementById('ai-input');
+const aiSubmit = document.getElementById('ai-submit');
+const aiLoading = document.getElementById('ai-loading');
+const aiBtnText = document.getElementById('ai-btn-text');
+
 // Stats Elements
 const heroSongCount = document.getElementById('hero-song-count');
 
@@ -613,6 +623,90 @@ function closeMixerModal() {
 
 closeMixer.addEventListener('click', closeMixerModal);
 document.getElementById('mixer-backdrop').addEventListener('click', closeMixerModal);
+
+// ==========================================
+// AI ORACLE LOGIC
+// ==========================================
+aiTrigger.addEventListener('click', () => {
+  aiModal.classList.remove('hidden');
+  void aiModal.offsetWidth; // trigger reflow
+  aiModal.classList.remove('opacity-0');
+  aiContent.classList.remove('scale-95');
+  aiContent.classList.add('scale-100');
+  aiInput.value = ''; // clear input
+});
+
+function closeAiModal() {
+  aiModal.classList.add('opacity-0');
+  aiContent.classList.remove('scale-100');
+  aiContent.classList.add('scale-95');
+  setTimeout(() => {
+    aiModal.classList.add('hidden');
+  }, 700);
+}
+
+closeAi.addEventListener('click', closeAiModal);
+document.getElementById('ai-backdrop').addEventListener('click', closeAiModal);
+
+aiSubmit.addEventListener('click', async () => {
+  const situation = aiInput.value.trim();
+  if (!situation) return;
+  
+  // UI Loading State
+  aiSubmit.classList.add('hidden');
+  aiLoading.classList.remove('hidden');
+  aiLoading.classList.add('flex');
+  
+  // Create a list of all song titles and their mood to help the AI
+  const songListText = allSongsList.map(s => `- ${s.title} (Mood: ${MOODS[s.mood].label})`).join('\n');
+  
+  try {
+    const response = await fetch('/api/match', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        situation,
+        songListText
+      })
+    });
+    
+    if (!response.ok) throw new Error('API failed');
+    const data = await response.json();
+    const songTitle = data.song;
+    
+    // Find the matching song object
+    const matchedSong = allSongsList.find(s => s.title.toLowerCase() === songTitle.toLowerCase());
+    
+    if (matchedSong) {
+      const mData = MOODS[matchedSong.mood];
+      // Close AI Modal and open Song Drawer
+      closeAiModal();
+      // Delay slightly for smooth transition
+      setTimeout(() => {
+        openSongDrawer(matchedSong.title, matchedSong.album, mData);
+      }, 500);
+    } else {
+      // Fallback if AI hallucinates or formatting is off
+      const randomSong = allSongsList[Math.floor(Math.random() * allSongsList.length)];
+      const randomData = MOODS[randomSong.mood];
+      showToast("The Oracle spoke in riddles. Here is a song chosen by fate.");
+      closeAiModal();
+      setTimeout(() => {
+        openSongDrawer(randomSong.title, randomSong.album, randomData);
+      }, 1500);
+    }
+  } catch (error) {
+    console.error(error);
+    showToast("The connection to the Oracle was lost. Please try again.");
+  } finally {
+    // Reset UI
+    aiSubmit.classList.remove('hidden');
+    aiLoading.classList.add('hidden');
+    aiLoading.classList.remove('flex');
+  }
+});
 
 
 // ==========================================
